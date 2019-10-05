@@ -1,0 +1,32 @@
+{
+  "name": "vision",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node webserver.js",
+    "dev": "nodemon webserver.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
+    "https": "^1.0.0",
+    "mongoose": "^5.7.3",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^6.5.1",
+    "grunt": "^1.0.4",
+    "grunt-exec": "^3.0.0",
+    "grunt-js-test": "^2.0.3",
+    "grunt-mocha-test": "^0.13.3",
+    "mocha": "^6.2.1",
+    "nodemon": "^1.19.3"
+  }
+}
