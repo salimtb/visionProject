@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "commander": "^3.0.2",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
     "http": "0.0.0",
@@ -27,6 +28,9 @@
     "grunt-js-test": "^2.0.3",
     "grunt-mocha-test": "^0.13.3",
     "mocha": "^6.2.1",
-    "nodemon": "^1.19.3"
+    "mongoose-type-url": "^1.0.6",
+    "nock": "^11.3.6",
+    "nodemon": "^1.19.3",
+    "supertest": "^4.0.2"
   }
 }
