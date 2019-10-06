@@ -2,12 +2,13 @@
 
 const express = require("express");
 const db = require("../_helpers/mongo");
+const path = require("path");
 const Product = db.Product;
 
 const router = express.Router();
 
 function product(req, res) {
-  res.send({ success: true });
+  res.sendFile(path.join(__dirname, "../data", "test.csv"));
 }
 
 async function createProduct(req, res) {
@@ -18,22 +19,23 @@ async function createProduct(req, res) {
   res.send({ success: true });
 }
 
-function create(productParam) {
+async function create(productParam) {
   // validate
-  Product.findOne({ id: productParam.id })
-    .exec()
-    .then(data => {
-      console.log("data");
-      console.log(data);
-    })
-    .catch(err => {
-      console.log("err");
-      console.log(err);
-    });
+  try {
+    const exist = await Product.findOne({ id: productParam.id });
+    if (exist) {
+      throw {
+        status: 409,
+        message: "product with same id already exist"
+      };
+    } else {
+      const product = new Product(productParam);
 
-  const product = new Product(productParam);
-
-  product.save();
+      product.save();
+    }
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 router.get("/test", product).post("/create", createProduct);
