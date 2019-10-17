@@ -11,16 +11,22 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/vision": "^1.4.0",
     "body-parser": "^1.19.0",
+    "colour-proximity": "0.0.2",
     "commander": "^3.0.2",
     "csv-parse": "^4.6.3",
     "csv-parser": "^2.3.1",
     "express": "^4.17.1",
+    "faker": "^4.1.0",
     "fs": "0.0.1-security",
     "http": "0.0.0",
     "https": "^1.0.0",
     "mongoose": "^5.7.3",
     "path": "^0.12.7",
+    "rgb-hex": "^3.0.0",
+    "sinon": "^7.5.0",
+    "sinon-chai": "^3.3.0",
     "superagent": "^5.1.0"
   },
   "devDependencies": {
@@ -31,9 +37,21 @@
     "grunt-js-test": "^2.0.3",
     "grunt-mocha-test": "^0.13.3",
     "mocha": "^6.2.1",
+    "mockgoose": "^8.0.3",
     "mongoose-type-url": "^1.0.6",
     "nock": "^11.3.6",
     "nodemon": "^1.19.3",
     "supertest": "^4.0.2"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salimtb/visionProject.git"
+  },
+  "bugs": {
+    "url": "https://github.com/salimtb/visionProject/issues"
+  },
+  "homepage": "https://github.com/salimtb/visionProject#readme"
 }
