@@ -6,6 +6,7 @@ const path = require("path");
 const vision = require("@google-cloud/vision");
 const colorProximity = require("colour-proximity");
 const rgbHex = require("rgb-hex");
+
 const Product = db.Product;
 
 const router = express.Router();
@@ -16,16 +17,21 @@ const router = express.Router();
  * @return {object}
  */
 async function createProduct(req, res) {
-  const product = req.body;
+  try {
+    const product = req.body;
 
-  await create(product);
+    await create(product);
 
-  res.send(product);
+    res.json(product);
+  } catch (e) {
+    res.json(e);
+  }
 }
 
 /**
- * Root for find product by Id
- * @param {string} - A json param of Product
+ * find proximity colors of some product
+ * @param {object} req - request object
+ * @param {object} res - response object
  * @return {object}
  */
 async function findProduct(req, res) {
@@ -58,7 +64,8 @@ async function findProduct(req, res) {
 
 /**
  * Request google cision api and add dominate color
- * @param {string} - A json param of Product
+ * @param {object} req - request object
+ * @param {object} res - response object
  * @return {object} - A json param of Product with dominate color
  */
 async function googleApi(req, res) {
@@ -100,31 +107,27 @@ async function googleApi(req, res) {
 
 /**
  * Create product and persist in data base
- * @param {string} - A json param of Product
+ * @param {string} productParam - A json param of Product
  * @return {object}
  */
 async function create(productParam) {
   // validate
-  try {
-    const exist = await Product.findOne({ id: productParam.id });
-    if (exist) {
-      throw {
-        status: 409,
-        message: "product with same id already exist"
-      };
-    } else {
-      const product = new Product(productParam);
+  const exist = await Product.findOne({ id: productParam.id });
+  if (exist) {
+    throw {
+      status: 409,
+      message: "product with same id already exist"
+    };
+  } else {
+    const product = new Product(productParam);
 
-      product.save();
-    }
-  } catch (e) {
-    console.log(e);
+    product.save();
   }
 }
 
 /**
  * Find product by Id
- * @param {string} - A json param of id product
+ * @param {string} productId - A json param of id product
  * @return {object}
  */
 async function findById(productId) {
@@ -139,16 +142,16 @@ async function findById(productId) {
     };
   }
 }
-
+/**
+ * Update product and add informations
+ * @param {string} productParam - json param of id product
+ * @param {string} dominantColors - information to add
+ * @return {object}
+ */
 async function update(productParam, dominantColors) {
-  // validate
-  try {
-    const obj = { ...productParam, ...dominantColors };
-    await Product.updateOne(productParam, obj);
-    return obj;
-  } catch (e) {
-    console.log(e);
-  }
+  const productWithColors = { ...productParam, ...dominantColors };
+  await Product.updateOne(productParam, productWithColors);
+  return productWithColors;
 }
 
 router
