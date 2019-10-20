@@ -34,7 +34,7 @@ async function createProduct(req, res) {
  * @param {object} res - response object
  * @return {object}
  */
-async function findProduct(req, res) {
+async function colorProximityEndPoint(req, res) {
   try {
     const productId = req.params.id;
 
@@ -44,7 +44,7 @@ async function findProduct(req, res) {
     Product.find({}, function(err, products) {
       let productSimilarColors = [];
       products.forEach(product => {
-        // if differente to our product
+        // if we have different to our product
         if (product.id !== productFound.id) {
           const distance = colorProximity.proximity(
             `#${rgbHex(...productFound.rgb)}`,
@@ -68,7 +68,7 @@ async function findProduct(req, res) {
  * @param {object} res - response object
  * @return {object} - A json param of Product with dominate color
  */
-async function googleApi(req, res) {
+async function domiantColorEndPoint(req, res) {
   // Creates a client
   const client = new vision.ImageAnnotatorClient();
 
@@ -155,8 +155,8 @@ async function update(productParam, dominantColors) {
 }
 
 router
-  .get("/colorProximity/:id", findProduct)
+  .get("/colorProximity/:id", colorProximityEndPoint)
   .post("/create", createProduct)
-  .put("/google", googleApi);
+  .put("/dominantColor", domiantColorEndPoint);
 
 module.exports = router;

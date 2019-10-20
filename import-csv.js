@@ -41,7 +41,7 @@ if (program.google) {
     .on("end", () => {
       results.forEach(product => {
         superagent
-          .put("localhost:8080/product/google")
+          .put("localhost:8080/product/dominantColor")
           .send(product)
           .end((error, res) => {
             error

@@ -1,0 +1,174 @@
+{
+  "swagger": "2.0",
+  "title": "Music API Documentation",
+  "description": "MUSIC API course for egghead",
+  "license": { "name": "MIT", "url": "https://opensource.org/licenses/MIT" },
+  "version": "1.0.0",
+  "host": "polar-plateau-87434.herokuapp.com",
+  "basePath": "/api",
+  "tags": [{ "name": "Products", "description": "API for Products Endpoints" }],
+  "schemes": ["http", "https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/product/create": {
+      "post": {
+        "tags": ["Products"],
+        "summary": "API Endpoint to create Product",
+        "description": "Create new Product in database",
+        "parameters": [
+          {
+            "name": "product",
+            "description": "product params to regitser new product",
+            "in": "body",
+            "required": "true",
+            "schema": { "$ref": "#definitions/Product" }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "New product has Created",
+            "schema": { "$ref": "#definitions/Product" }
+          },
+          "409": {
+            "description": "Some product already exits",
+            "schema": {
+              "status": 409,
+              "message": "product with same id already exist"
+            }
+          }
+        }
+      }
+    },
+    "/product/dominantColor": {
+      "put": {
+        "tags": ["Products"],
+        "summary": "API Endpoint to find dominant color of product and persist it",
+        "description": "find dominant color of product and persist it by updating product",
+        "parameters": [
+          {
+            "name": "product",
+            "description": "product params to find dominant color",
+            "in": "body",
+            "required": "true",
+            "schema": { "$ref": "#definitions/Product" }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Product dominant color for X added",
+            "schema": { "$ref": "#definitions/ProductWithColor" }
+          },
+          "404": {
+            "description": "product not found",
+            "schema": {
+              "status": 404,
+              "message": "product not found"
+            }
+          }
+        }
+      }
+    },
+    "/colorProximity/:id": {
+      "get": {
+        "tags": ["Products"],
+        "summary": "API Endpoint to find other products with proximity colors",
+        "description": "API Endpoint to find others products with proximity colors",
+        "parameters": [
+          {
+            "name": "product",
+            "description": "product params to find others products with proximity colors",
+            "in": "body",
+            "required": "true",
+            "schema": { "$ref": "#definitions/ProductId" }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Product dominant color for X added",
+            "schema": { "$ref": "#definitions/ProductWithColor" }
+          },
+          "404": {
+            "description": "product not found",
+            "schema": {
+              "status": 404,
+              "message": "product not found"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Product": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "gender_id": {
+          "type": "string"
+        },
+        "composition": {
+          "type": "string"
+        },
+        "sleeve": {
+          "type": "string"
+        },
+        "photo": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "ProductWithColor": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "gender_id": {
+          "type": "string"
+        },
+        "composition": {
+          "type": "string"
+        },
+        "sleeve": {
+          "type": "string"
+        },
+        "photo": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "score": {
+          "type": "integer"
+        },
+        "rgb": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "ProductId": {
+      "required": ["id"],
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

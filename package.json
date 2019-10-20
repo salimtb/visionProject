@@ -23,7 +23,9 @@
     "mongoose": "^5.7.3",
     "path": "^0.12.7",
     "rgb-hex": "^3.0.0",
-    "superagent": "^5.1.0"
+    "superagent": "^5.1.0",
+    "swagger-ui-express": "^4.1.2",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",

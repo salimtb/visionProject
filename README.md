@@ -27,9 +27,12 @@ this project allows you to :
   `node import-csv -g <root of your csv file>`
 
 - endpoint api to get suggestions about proximity color of some product
-  `localhost:8080/product/colorProximity/:id`
+  `http://localhost:8080/product/colorProximity/:id`
 
 - to run unit test you can use this command :
   (make surre that your server is down)
 
   `grunt run:test`
+
+- to see api doc you can run :
+  `http://localhost:8080/api-docs`
