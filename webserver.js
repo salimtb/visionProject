@@ -8,6 +8,8 @@ const config = require("./config");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const product = require("./products/product.service");
+const swaggerDoc = require("./doc/swagger.json");
+const swaggerUi = require("swagger-ui-express");
 
 const app = express();
 const httpsPort = 8443;
@@ -16,6 +18,7 @@ const httpPort = 8080;
 // Use body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 app.use("/product", product);
 
 app.get("/", (req, res) => {

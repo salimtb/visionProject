@@ -4,6 +4,9 @@ const express = require("express");
 const db = require("../_helpers/mongo");
 const path = require("path");
 const vision = require("@google-cloud/vision");
+const colorProximity = require("colour-proximity");
+const rgbHex = require("rgb-hex");
+
 const Product = db.Product;
 
 const router = express.Router();
@@ -14,19 +17,58 @@ const router = express.Router();
  * @return {object}
  */
 async function createProduct(req, res) {
-  const product = req.body;
+  try {
+    const product = req.body;
 
-  await create(product);
+    await create(product);
 
-  res.send(product);
+    res.json(product);
+  } catch (e) {
+    res.json(e);
+  }
+}
+
+/**
+ * find proximity colors of some product
+ * @param {object} req - request object
+ * @param {object} res - response object
+ * @return {object}
+ */
+async function colorProximityEndPoint(req, res) {
+  try {
+    const productId = req.params.id;
+
+    const productFound = await findById(productId);
+
+    // loop over all items and extract product with similar colors
+    Product.find({}, function(err, products) {
+      let productSimilarColors = [];
+      products.forEach(product => {
+        // if we have different to our product
+        if (product.id !== productFound.id) {
+          const distance = colorProximity.proximity(
+            `#${rgbHex(...productFound.rgb)}`,
+            `#${rgbHex(...product.rgb)}`
+          );
+          if (distance <= 1) {
+            productSimilarColors.push(product);
+          }
+        }
+      });
+      res.json(productSimilarColors);
+    });
+  } catch (e) {
+    res.json(e);
+  }
 }
 
 /**
  * Request google cision api and add dominate color
- * @param {string} - A json param of Product
+ * @param {object} req - request object
+ * @param {object} res - response object
  * @return {object} - A json param of Product with dominate color
  */
-async function googleApi(req, res) {
+async function domiantColorEndPoint(req, res) {
   // Creates a client
   const client = new vision.ImageAnnotatorClient();
 
@@ -37,7 +79,12 @@ async function googleApi(req, res) {
       score:
         results[0].imagePropertiesAnnotation.dominantColors.colors[0].score *
         100,
-      rgb: `(${results[0].imagePropertiesAnnotation.dominantColors.colors[0].color.red},${results[0].imagePropertiesAnnotation.dominantColors.colors[0].color.green},${results[0].imagePropertiesAnnotation.dominantColors.colors[0].color.blue})`
+      rgb: [
+        results[0].imagePropertiesAnnotation.dominantColors.colors[0].color.red,
+        results[0].imagePropertiesAnnotation.dominantColors.colors[0].color
+          .green,
+        results[0].imagePropertiesAnnotation.dominantColors.colors[0].color.blue
+      ]
     };
 
     // find the updated product and send it
@@ -60,39 +107,56 @@ async function googleApi(req, res) {
 
 /**
  * Create product and persist in data base
- * @param {string} - A json param of Product
+ * @param {string} productParam - A json param of Product
  * @return {object}
  */
 async function create(productParam) {
   // validate
-  try {
-    const exist = await Product.findOne({ id: productParam.id });
-    if (exist) {
-      throw {
-        status: 409,
-        message: "product with same id already exist"
-      };
-    } else {
-      const product = new Product(productParam);
+  const exist = await Product.findOne({ id: productParam.id });
+  if (exist) {
+    throw {
+      status: 409,
+      message: "product with same id already exist"
+    };
+  } else {
+    const product = new Product(productParam);
 
-      product.save();
-    }
-  } catch (e) {
-    console.log(e);
+    product.save();
   }
 }
 
-async function update(productParam, dominantColors) {
+/**
+ * Find product by Id
+ * @param {string} productId - A json param of id product
+ * @return {object}
+ */
+async function findById(productId) {
   // validate
-  try {
-    const obj = { ...productParam, ...dominantColors };
-    await Product.updateOne(productParam, obj);
-    return obj;
-  } catch (e) {
-    console.log(e);
+  const product = await Product.findOne({ id: productId });
+  if (product) {
+    return product;
+  } else {
+    throw {
+      status: 404,
+      message: "product Not Found"
+    };
   }
 }
+/**
+ * Update product and add informations
+ * @param {string} productParam - json param of id product
+ * @param {string} dominantColors - information to add
+ * @return {object}
+ */
+async function update(productParam, dominantColors) {
+  const productWithColors = { ...productParam, ...dominantColors };
+  await Product.updateOne(productParam, productWithColors);
+  return productWithColors;
+}
 
-router.post("/create", createProduct).put("/google", googleApi);
+router
+  .get("/colorProximity/:id", colorProximityEndPoint)
+  .post("/create", createProduct)
+  .put("/dominantColor", domiantColorEndPoint);
 
 module.exports = router;

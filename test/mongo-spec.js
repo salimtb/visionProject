@@ -87,7 +87,7 @@ describe("api/products", function() {
       };
 
       const res = await agent
-        .put("/product/google")
+        .put("/product/dominantColor")
         .send(product)
         .set("Accept", "application/json");
 

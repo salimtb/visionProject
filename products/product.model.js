@@ -17,7 +17,7 @@ const schema = new Schema({
   photo: { type: String, required: false },
   url: { type: mongoose.SchemaTypes.Url, required: true },
   score: { type: Number },
-  rgb: { type: String }
+  rgb: [Number, Number, Number]
 });
 
 schema.set("toJSON", {
