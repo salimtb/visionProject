@@ -44,7 +44,7 @@ async function colorProximityEndPoint(req, res) {
     Product.find({}, function(err, products) {
       let productSimilarColors = [];
       products.forEach(product => {
-        // if we have different to our product
+        // we should ignore our product
         if (product.id !== productFound.id) {
           const distance = colorProximity.proximity(
             `#${rgbHex(...productFound.rgb)}`,

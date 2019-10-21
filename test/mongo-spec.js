@@ -57,7 +57,9 @@ describe("api/products", function() {
           "//image1.lacoste.com/dw/image/v2/AAQM_PRD/on/demandware.static/Sites-FR-Site/Sites-master/default/L1212_001_24.jpg?sw=458&sh=443",
 
         url:
-          "https://www.lacoste.com/fr/lacoste/homme/vetements/polos/polo-lacoste-l.12.12-uni/L1212-00.html?dwvar_L1212-00_color=001"
+          "https://www.lacoste.com/fr/lacoste/homme/vetements/polos/polo-lacoste-l.12.12-uni/L1212-00.html?dwvar_L1212-00_color=001",
+        rgb: [245, 245, 245],
+        score: 98.87545704841614
       };
 
       const res = await agent
@@ -95,5 +97,12 @@ describe("api/products", function() {
       expect(res.body).to.have.property("score");
       expect(res.body).to.have.property("rgb");
     }).timeout(500000);
+  });
+
+  describe("GET /", () => {
+    it("should rturn product with proximity color", async () => {
+      const res = await agent.get("/product/colorProximity/Test");
+      expect(res.status).to.equal(200);
+    });
   });
 });
