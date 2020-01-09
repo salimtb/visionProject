@@ -28,6 +28,22 @@ async function createProduct(req, res) {
   }
 }
 
+async function getAllProducts(req, res) {
+  try {
+    const product = req.body;
+    const products = await Product.find({});
+    const userMap = {};
+    const userTab = [];
+    products.forEach(user => {
+      userTab.push((userMap[user.id] = user));
+    });
+
+    res.json(userTab);
+  } catch (e) {
+    res.json(e);
+  }
+}
+
 /**
  * find proximity colors of some product
  * @param {object} req - request object
@@ -156,6 +172,7 @@ async function update(productParam, dominantColors) {
 
 router
   .get("/colorProximity/:id", colorProximityEndPoint)
+  .get("/allProducts", getAllProducts)
   .post("/create", createProduct)
   .put("/dominantColor", domiantColorEndPoint);
 

@@ -12,7 +12,7 @@ const schema = new Schema({
   id: { type: String, unique: true, required: true },
   title: { type: String, required: true },
   gender_id: { type: String, unique: false, required: true },
-  composition: { type: String, required: true },
+  composition: { type: String, required: false },
   sleeve: { type: String, required: false },
   photo: { type: String, required: false },
   url: { type: mongoose.SchemaTypes.Url, required: true },
